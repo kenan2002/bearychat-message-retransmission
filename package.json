@@ -1,0 +1,15 @@
+{
+  "name": "bearychat-message-retransmission",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bearychat": "^1.2.0",
+    "bearychat-rtm-client": "^0.4.1"
+  }
+}
