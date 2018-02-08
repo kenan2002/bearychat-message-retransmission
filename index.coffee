@@ -22,16 +22,14 @@ rtmClient.on RTMClientEvents.ONLINE, ->
 rtmClient.on RTMClientEvents.OFFLINE, ->
   console.log 'RTM offline'
 
-start = ->
-  httpClient.p2p.create({user_id: targetUserId})
-    .then (targetVChannel) ->
-      console.log targetVChannel
+httpClient.p2p.create({user_id: targetUserId})
+  .then (targetVChannel) ->
+    console.log targetVChannel
 
-      rtmClient.on RTMClientEvents.EVENT, (eventMessage) ->
-        if bearychat.rtm.message.isChatMessage(eventMessage) and eventMessage.vchannel_id != targetVChannel.vchannel_id
-          httpClient.message.create
-            vchannel_id: targetVChannel.vchannel_id,
-            attachments: eventMessage.attachments ? [],
-            text: eventMessage.text
+    rtmClient.on RTMClientEvents.EVENT, (eventMessage) ->
+      if bearychat.rtm.message.isChatMessage(eventMessage) and eventMessage.vchannel_id != targetVChannel.vchannel_id
+        httpClient.message.create
+          vchannel_id: targetVChannel.vchannel_id,
+          attachments: eventMessage.attachments ? [],
+          text: eventMessage.text
 
-start()
