@@ -13,8 +13,7 @@ targetUserId = '=bw74b'
 httpClient = new HTTPClient token
 rtmClient = new RTMClient
   url: ->
-    rtmData = await httpClient.rtm.start()
-    rtmData.ws_host
+    httpClient.rtm.start().then (data) -> data.ws_host
   WebSocket: WebSocket
 
 rtmClient.on RTMClientEvents.ONLINE, ->
@@ -24,16 +23,15 @@ rtmClient.on RTMClientEvents.OFFLINE, ->
   console.log 'RTM offline'
 
 start = ->
-  targetVChannel = await httpClient.p2p.create
-    user_id: targetUserId
+  httpClient.p2p.create({user_id: targetUserId})
+    .then (targetVChannel) ->
+      console.log targetVChannel
 
-  console.log targetVChannel
-
-  rtmClient.on RTMClientEvents.EVENT, (eventMessage) ->
-    if bearychat.rtm.message.isChatMessage(eventMessage) and eventMessage.vchannel_id != targetVChannel.vchannel_id
-      httpClient.message.create
-        vchannel_id: targetVChannel.vchannel_id,
-        attachments: eventMessage.attachments ? [],
-        text: eventMessage.text
+      rtmClient.on RTMClientEvents.EVENT, (eventMessage) ->
+        if bearychat.rtm.message.isChatMessage(eventMessage) and eventMessage.vchannel_id != targetVChannel.vchannel_id
+          httpClient.message.create
+            vchannel_id: targetVChannel.vchannel_id,
+            attachments: eventMessage.attachments ? [],
+            text: eventMessage.text
 
 start()
